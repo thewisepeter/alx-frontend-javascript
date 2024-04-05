@@ -7,23 +7,10 @@ export default function handleProfileSignup(firstName, lastName, fileName) {
     signUpUser(firstName, lastName), // Promise for signing up user
   ])
     .then((results) => {
-    // Create an array to store the status and value/error of each settled Promise
-      const resultArray = results.map((result) => {
-        if (result.status === 'fulfilled') {
-        // If the Promise was fulfilled (resolved), return an object with status and value
-          return {
-            status: 'fulfilled',
-            value: result.value, // value returned by the resolved Promise
-          };
-        }
-        // If the Promise was rejected, return an object with status and error
-        return {
-          status: 'rejected',
-          error: result.reason, // error returned by the rejected Promise
-        };
-      });
-
-      // Return the array containing status and value/error of each settled Promise
-      return resultArray;
+      // Process the result array from Promise.allSettled using .then() handler
+      results.map((result) => ({
+        status: result.status, // Extract status (either 'fulfilled' or 'rejected')
+        value: result.status === 'fulfilled' ? result.value : String(result.reason), // Determine value based on status
+      }));
     });
 }
